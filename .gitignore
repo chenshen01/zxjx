@@ -1,0 +1,44 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+**/.mvn
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+.idea/
+**/out
+overlays/
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+
+
+# Eclipse
+.classpath
+.project
+.settings/
+.apt_generated
+.factorypath
+.settings
+.springBeans
+.sts4-cache
+
+# Mac
+.DS_Store
+
+# Maven
+**/target
+**/*.log
+**/*.tmp
+
+**/rebel.xml
+**/.rebel.xml.bak
+**/.rebel-remote.xml.bak
