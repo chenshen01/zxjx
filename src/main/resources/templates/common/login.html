@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	 <head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="x-ua-compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+	    <link rel="stylesheet" href="js/css/bootstrap.min.css" >
+		<link rel="stylesheet" href="js/css/bootstrap.css">
+		<link rel="stylesheet" href="js/css/bootstrap-theme.css"/>
+		<link rel="stylesheet" href="js/css/bootstrap-theme.min.css"/>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#loginForm{
+				position: absolute;
+				margin-top: 8%;
+				margin-left: 33%;
+				width: 400px;
+			}
+			#roleValue{
+				width: 100px;
+				height: 30px;
+				position: absolute;
+				margin-top: 2%;
+				margin-left: 15%;
+			}
+			#loginBtn{
+				position: absolute;
+				margin-top: 2%;
+				margin-left: 60%;
+			}
+		</style>
+	  </head>
+	  <body>
+		<header>
+			<nav class="navbar navbar-default navbar-inverse row">
+			  <div class="container-fluid">
+			    <div class="navbar-header col-lg-3">
+			      <p class="navbar-brand" href="#">
+			             <h3 style="color: white;">蔚洁在线教育</h3>
+			       </p>
+			    </div>
+			  </div>
+			</nav>
+		</header> 
+		<div id="loginForm" class="row">
+			<div id="errorMsgDiv">
+				<p id="errorMsg" style="color: red; font-size: 23px;"></p>
+			</div>
+			<div class="input-group input-group-lg" style="padding: 5px; margin: 5px;">
+			  <span class="input-group-addon">账号</span>
+			  <input id ="code" type="text" class="form-control" placeholder="账号" aria-describedby="sizing-addon1">
+			</div>
+			<div class="input-group input-group-lg" style="padding: 5px; margin: 5px;">
+			  <span class="input-group-addon">密码</span>
+			  <input id = "password" type="password" class="form-control" placeholder="密码" aria-describedby="sizing-addon1">
+			</div>
+				<div>
+					<select id="roleValue" placeholder="---角色选择---">
+						<option value="" style="text-align: center;">---角色选择---</option>
+						<option value="学生" style="text-align: center;">学生</option>
+						<option value="教师"  style="text-align: center;">教师</option>
+						<option value="管理员"  style="text-align: center;">管理员</option>
+					</select>
+				</div>
+				<div>
+					<button id="loginBtn" type="button" class="btn btn-success" style="width: 80px;">
+					   登录
+					 </button>
+				</div>
+		</div>
+		<script src="js/js/jQuery-3.4.1.js"></script>
+		<script src="js/js/bootstrap.js"></script>
+		<script src="js/js/bootstrap.min.js"></script>
+		
+		<script type="text/javascript">
+			 $(function(){
+				 // 错误信息
+				 function errorMsge(){
+					 var errorMsg = $("#errorMsg").val();
+					  if (errorMsg == "") {
+						 $("#errorMsg").css("display","none");
+					  }
+				 }
+				 errorMsge();
+				 // 登陆
+				$("#loginBtn").click(function(){
+					var code = $("#code").val();
+					var password = $("#password").val();
+					var role = $("#roleValue").val();
+					var errorMsg = "";
+					// 进行登陆校验
+					if (code == "") {
+						errorMsg += "请输入账号";
+					}
+					if (password == "") {
+						if (errorMsg != "") {
+							errorMsg +="和密码"
+						} else {
+							errorMsg += "请输入密码"
+						}
+					}
+					if (role == "") {
+						if (errorMsg != "") {
+							errorMsg += "，选择登陆角色";
+						} else {
+							errorMsg += "选择登陆角色"
+						}
+					}
+					if (errorMsg != "") {
+						 $("#errorMsg").css("display","block");
+						 $("#errorMsg").html(errorMsg);
+						 return;
+					} else {
+						 $("#errorMsg").css("display","none");
+					}
+					// 开始登陆
+					var loginInfo = {
+						"code":code,
+						"password":password,
+						"role":role
+					}
+					$.ajax({
+					        type:"POST",
+						    async:false,
+					        url:"/zxjx/login",
+					        dataType:"json",
+							contentType:"application/json",
+					        data:JSON.stringify(loginInfo),
+							success:function (data) {
+								if (data.code == "200") {
+									if (data.result == "管理员") {
+										// 去管理员主页
+										window.location.href = "/admin";
+									} else if (data.result == "学生") {
+										// 去学生主页
+										window.location.href = "/student/getStudentMain";
+									} else if (data.result == "教师") {
+										// 去教师主页
+										window.location.href = "/teacher/getTeacherMain";
+									}
+								} else {
+									$("#errorMsg").css("display","block");
+									$("#errorMsg").html(data.message);
+									return;
+								}
+							}
+					    })
+					return false;
+				})
+			}) 
+		</script>
+	  </body>
+</html>

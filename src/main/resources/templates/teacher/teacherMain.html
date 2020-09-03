@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	 <head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="x-ua-compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+	    <link rel="stylesheet" href="../js/css/bootstrap.min.css" >
+		<link rel="stylesheet" href="../js/css/bootstrap.css">
+		<link rel="stylesheet" href="../js/css/bootstrap-theme.css"/>
+		<link rel="stylesheet" href="../js/css/bootstrap-theme.min.css"/>
+		<style>
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			#teacherWelcome{
+				font-family: 宋体;
+				font-size: 70px;
+			}
+			#welcome{
+				position: absolute;
+				margin-top: 10%;
+				margin-left: -5%;
+			}
+			#teaNickName{
+				position: absolute;
+				margin-top: 10%;
+				margin-left: 7%;
+			}
+			#teacher{
+				position: absolute;
+				margin-top: 10%;
+				margin-left: 19%;
+			}
+			#coursePagination{
+				position: absolute;
+				margin-top: 38%;
+				margin-left: 45%;
+			}
+			#classPagination{
+				position: absolute;
+				margin-top: 33%;
+				margin-left: 45%;
+			}
+			#vacationPagination {
+				position: absolute;
+				margin-top: 33%;
+				margin-left: 50%;
+			}
+		</style>
+	  </head>
+	  <body>
+		<header>
+			<nav class="navbar navbar-default navbar-inverse row">
+			  <div class="container-fluid">
+			    <div class="navbar-header col-lg-3">
+			      <p class="navbar-brand" href="#">
+			             <h3 style="color: white;">蔚洁在线教育</h3>
+			       </p>
+			    </div>
+			  </div>
+			</nav>
+		</header> 
+		<div id="teacherMainInfo" class="row">
+			<div class="col-lg-2">
+				<ul class="list-group" style="text-align: center;">
+				  <li id="teachedCourse" class="list-group-item"><button class="btn btn-success"  style="width: 150px">我所教授的课程</button></li>
+				  <li id="teachedClass" class="list-group-item"><button class="btn btn-success"  style="width: 150px">我所教授的班级</button></li>
+				  <li id="adjustClassRequsition" class="list-group-item"><button class="btn btn-success"  style="width: 150px">我的调课申请</button></li>
+				  <li id="vacationRequsition" class="list-group-item"><button class="btn btn-success"  style="width: 150px">我的请假申请</button></li>
+				  <li id="teacherInfo" class="list-group-item"><button class="btn btn-success"  style="width: 150px">我的个人信息</button></li>
+				</ul>
+			</div>
+			<div class="col-lg-10">
+				<!--隐藏id-->
+				<input id="t_id" type="text" class="form-control" style="display: none" th:value="${teacher.id}">
+				<div id="teacherWelcome" class="col-lg-offset-3" style="display: block">
+					<p id="welcome">欢迎</p>
+					<p id="teaNickName" th:text="${teacher.nickName}"></p>
+					<p id="teacher">老师</p>
+				</div >
+				<div id="teachedCourseInfo" style="display: none">
+					<div class="col-sm-6 col-md-4" style="width: 200px">
+						<div class="thumbnail">
+							<img src="/image/common/add.jpg" style="height: 100px">
+							<div class="caption">
+								<h3>课程名字</h3>
+								<p>老师</p>
+								<p><button class="btn btn-primary" role="button" onclick="addCourse()">增加</button></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-4" style="width: 200px">
+						<div class="thumbnail">
+							<img src="/image/headImage/mmexport1557393582420.jpg" style="height: 100px">
+							<div class="caption">
+								<h3>java程序设计</h3>
+								<p>老师：陈升</p>
+								<p><button class="btn btn-primary" role="button">修改</button>
+									<button class="btn btn-default" role="button">删除</button></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="teachedClassInfo" style="display: none">
+
+				</div>
+				<!-- 调课申请管理-->
+				<div id="adjustClassInfo" style="display: none;">
+					<div class="panel panel-default">
+						<div class="panel-heading">调课申请管理</div>
+						<table id="adjustClassInfoTable" class="table" style="text-align: center;">
+							<thead>
+							<tr>
+								<th style="text-align: center;">课程</th>
+								<th style="text-align: center;">调课前时间</th>
+								<th style="text-align: center;">调整时间</th>
+								<th style="text-align: center;">状态</th>
+								<th style="text-align: center;">操作</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td>JAVA</td>
+								<td>2020-05-03</td>
+								<td>2020-05-04</td>
+								<td>等待审批</td>
+								<td><a>撤回</a></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div id="vacationRequsitionInfo" style="display: none">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<p>请假申请管理
+							<button class="btn btn-success" style="width: 80px" onclick="createVacation()">新建</button></p>
+						</div>
+						<table id="vacationInfoTable" class="table" style="text-align: center;">
+							<thead>
+							<tr>
+								<th style="text-align: center;">请假时间从</th>
+								<th style="text-align: center;">请假时间至</th>
+								<th style="text-align: center;">状态</th>
+								<th style="text-align: center;">操作</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td>2020-05-03</td>
+								<td>2020-05-04</td>
+								<td>等待审批</td>
+								<td><a>撤销</a></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div id="coursePagination" style="display: none">
+
+			</div>
+			<div id="classPagination" style="display: none">
+
+			</div>
+			<div id="vacationPagination" style="display: none">
+
+			</div>
+		</div>
+		<script src="../js/js/jQuery-3.4.1.js"></script>
+		<script src="../js/js/bootstrap.js"></script>
+		<script src="../js/js/bootstrap.min.js"></script>
+	  	<script type="text/javascript">
+			$(function () {
+				// tab切换
+				$("#teachedCourse").click(function () {
+					$("#teacherWelcome").css("display","none");
+					$("#teachedCourseInfo").css("display","block");
+					$("#teachedClassInfo").css("display","none");
+					$("#adjustClassInfo").css("display","none");
+					$("#vacationRequsitionInfo").css("display","none");
+
+					$("#coursePagination").css("display","block");
+					$("#classPagination").css("display","none");
+					$("#vacationPagination").css("display","none");
+				})
+
+				$("#teachedClass").click(function () {
+					$("#teacherWelcome").css("display","none");
+					$("#teachedCourseInfo").css("display","none");
+					$("#teachedClassInfo").css("display","block");
+					$("#adjustClassInfo").css("display","none");
+					$("#vacationRequsitionInfo").css("display","none");
+
+					$("#coursePagination").css("display","none");
+					$("#classPagination").css("display","block");
+					$("#vacationPagination").css("display","none");
+				})
+
+				$("#adjustClassRequsition").click(function () {
+					$("#teacherWelcome").css("display","none");
+					$("#teachedCourseInfo").css("display","none");
+					$("#teachedClassInfo").css("display","none");
+					$("#adjustClassInfo").css("display","block");
+					$("#vacationRequsitionInfo").css("display","none");
+
+					$("#coursePagination").css("display","none");
+					$("#classPagination").css("display","none");
+					$("#vacationPagination").css("display","block");
+				})
+
+				$("#vacationRequsition").click(function () {
+					$("#teacherWelcome").css("display","none");
+					$("#teachedCourseInfo").css("display","none");
+					$("#teachedClassInfo").css("display","none");
+					$("#adjustClassInfo").css("display","none");
+					$("#vacationRequsitionInfo").css("display","block");
+
+					$("#coursePagination").css("display","none");
+					$("#classPagination").css("display","none");
+					$("#vacationPagination").css("display","block");
+				})
+
+				// 添加课程
+				addCourse = function () {
+					// 新建课程
+					window.location.href = "/teacher/teacherAddCourse";
+				}
+
+				// 初始化我教授的课程
+				function initCourses(){
+					var teachedBy = $("#t_id").val();
+					$.ajax({
+						type:"GET",
+						async:false,
+						url:"/zxjx/courses/selectPagesByCondition?teachedBy=" + teachedBy,
+						dataType:"json",
+						contentType:"application/json",
+						success:function (data) {
+							var html = [];
+							var k = 0;
+							var length = data.result.content.length + 1;
+							for (var i = 0; i < length ; i++) {
+								if (i == 0) {
+									html.push(
+									'<div class="col-sm-6 col-md-4" style="width: 200px">' +
+										'<div class="thumbnail">' +
+										'<img src="/image/common/add.jpg" style="height: 100px">' +
+											'<div class="caption">' +
+											'<h3>课程名字</h3>' +
+											'<p>老师</p>' +
+											'<p><button class="btn btn-primary" role="button" onclick="addCourse()">增加</button></p>' +
+											'</div>' +
+										'</div>' +
+									'</div>'
+									)
+								} else {
+									html.push(
+										'<div class="col-sm-6 col-md-4" style="width: 200px">' +
+												'<div class="thumbnail">' +
+												'<img src=" '+ data.result.content[k].courseImage +'" style="height: 100px">' +
+												'<div class="caption">' +
+											    '<h3>' + data.result.content[k].courseName + '</h3>' +
+												'<p>' + data.result.content[k].teachedBy+ '</p>' +
+										'<p><button class="btn btn-primary" role="button">查看</button>' +
+										'<button class="btn btn-default" role="button" onclick="deleteCourse(' + data.result.content[k].id +')">删除</button></p>'+
+										'</div>' +
+										'</div>' +
+										'</div>'
+									)
+									k++;
+								}
+							}
+							$("#teachedCourseInfo").html(html.join(""));
+							var pageHtml = [];
+							var pageCount = (data.result.totalSize + 1) % data.result.pageSize;
+							var realPageSize;
+							if (pageCount == 0) {
+								realPageSize = (data.result.totalSize + 1) / data.result.pageSize;
+							} else {
+								realPageSize = (data.result.totalSize + 1) / data.result.pageSize + 1;
+							}
+							pageHtml.push(
+									'<nav aria-label="Page navigation">' +
+									'<ul class="pagination">' +
+									'<li>' +
+									'<a aria-label="Previous">' +
+									'<span aria-hidden="true">&laquo;</span>' +
+									'</a>' +
+									'</li>');
+							for (var i = 0;i < Math.floor(realPageSize) ;i++) {
+								var pageNum = i + 1;
+								pageHtml.push(' <li><a onclick="queryByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+							}
+							pageHtml.push(
+									'<li>' +
+									'<a href="#" aria-label="Next">' +
+									'<span aria-hidden="true">&raquo;</span>' +
+									'</a>' +
+									'</li>' +
+									'</ul>' +
+									'</nav>');
+							$("#coursePagination").html(pageHtml.join(""));
+						}
+					})
+				}
+
+				// 课程分页
+				queryByPageNum = function(pageNum){
+					$.ajax({
+						type:"GET",
+						async:false,
+						url:"/zxjx/courses/selectPagesByCondition?pageNum=" + pageNum,
+						dataType:"json",
+						contentType:"application/json",
+						success:function (data) {
+							var html = [];
+							var k = 0;
+							var length = data.result.content.length + 1;
+							for (var i = 0; i < length ; i++) {
+								if (i == 0) {
+									html.push(
+											'<div class="col-sm-6 col-md-4" style="width: 200px">' +
+											'<div class="thumbnail">' +
+											'<img src="/image/common/add.jpg" style="height: 100px">' +
+											'<div class="caption">' +
+											'<h3>课程名字</h3>' +
+											'<p>老师</p>' +
+											'<p><button class="btn btn-primary" role="button" onclick="addCourse()">增加</button></p>' +
+											'</div>' +
+											'</div>' +
+											'</div>'
+									)
+								} else {
+									html.push(
+											'<div class="col-sm-6 col-md-4" style="width: 200px">' +
+											'<div class="thumbnail">' +
+											'<img src=" '+ data.result.content[k].courseImage +'" style="height: 100px">' +
+											'<div class="caption">' +
+											'<h3>' + data.result.content[k].courseName + '</h3>' +
+											'<p>' + data.result.content[k].teachedBy+ '</p>' +
+											'<p><button class="btn btn-primary" role="button">修改</button>' +
+											'<button class="btn btn-default" role="button" onclick="deleteCourse(' + data.result.content[k].id +')">删除</button></p>'+
+											'</div>' +
+											'</div>' +
+											'</div>'
+									)
+									k++;
+								}
+							}
+							$("#teachedCourseInfo").html(html.join(""));
+						}
+					})
+				}
+
+				// 删除课程
+				deleteCourse = function (courseId) {
+					$.ajax({
+						type:"POST",
+						async:false,
+						url:"/zxjx/courses/delete/" + courseId,
+						dataType:"json",
+						contentType:"application/json",
+						success:function (data) {
+							if (data) {
+								alert("删除成功");
+								initCourses();
+							}
+						}
+					})
+				}
+
+				// 初始化我教授的班级
+				function initClasses(){
+					var teacherId = $("#t_id").val();
+					$.ajax({
+						type:"GET",
+						async:false,
+						url:"/zxjx/teacher/queryPagesTeacherTeachingClasses?teacherId=" + teacherId,
+						dataType:"json",
+						contentType:"application/json",
+						success:function (data) {
+							var html = [];
+							for (var i = 0; i < data.result.content.length ; i++) {
+								html.push(
+									'<div class="col-sm-6 col-md-4" style="width: 200px">' +
+									'<div class="thumbnail">' +
+									'<img src=" '+ data.result.content[i].classImage +'" style="height: 100px">' +
+									'<div class="caption">' +
+									'<h3>' + data.result.content[i].classCode + '</h3>' +
+									'<p><button class="btn btn-primary" role="button">进入班级</button></p>'+
+									'</div>' +
+									'</div>' +
+									'</div>'
+								)
+							}
+							$("#teachedClassInfo").html(html.join(""));
+							var pageHtml = [];
+							var pageCount = (data.result.totalSize + 1) % data.result.pageSize;
+							var realPageSize;
+							if (pageCount == 0) {
+								realPageSize = (data.result.totalSize + 1) / data.result.pageSize;
+							} else {
+								realPageSize = (data.result.totalSize + 1) / data.result.pageSize + 1;
+							}
+							pageHtml.push(
+									'<nav aria-label="Page navigation">' +
+									'<ul class="pagination">' +
+									'<li>' +
+									'<a aria-label="Previous">' +
+									'<span aria-hidden="true">&laquo;</span>' +
+									'</a>' +
+									'</li>');
+							for (var i = 0;i < Math.floor(realPageSize) ;i++) {
+								var pageNum = i + 1;
+								pageHtml.push(' <li><a onclick="queryTeachedByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+							}
+							pageHtml.push(
+									'<li>' +
+									'<a href="#" aria-label="Next">' +
+									'<span aria-hidden="true">&raquo;</span>' +
+									'</a>' +
+									'</li>' +
+									'</ul>' +
+									'</nav>');
+							$("#classPagination").html(pageHtml.join(""));
+						}
+					})
+				}
+
+				// 查询我教的班级分页
+				queryTeachedByPageNum = function (pageNum) {
+					var teacherId = $("#t_id").val();
+					$.ajax({
+						type:"GET",
+						async:false,
+						url:"/zxjx/teacher/queryPagesTeacherTeachingClasses?teacherId=" + teacherId + "&pageNum=" +pageNum,
+						dataType:"json",
+						contentType:"application/json",
+						success:function (data) {
+							var html = [];
+							for (var i = 0; i < data.result.content.length ; i++) {
+								html.push(
+										'<div class="col-sm-6 col-md-4" style="width: 200px">' +
+										'<div class="thumbnail">' +
+										'<img src=" '+ data.result.content[i].classImage +'" style="height: 100px">' +
+										'<div class="caption">' +
+										'<h3>' + data.result.content[i].classCode + '</h3>' +
+										'<p><button class="btn btn-primary" role="button">进入班级</button></p>'+
+										'</div>' +
+										'</div>' +
+										'</div>'
+								)
+							}
+							$("#teachedClassInfo").html(html.join(""));
+						}
+					})
+				}
+
+				// 创建请假申请
+				createVacation = function () {
+					window.location.href = "/common/createVacation";
+				}
+				// 初始化我的请假申请
+				function initVacations() {
+					var teacherId = $("#t_id").val();
+					var role = "老师";
+					$.ajax({
+						type:"GET",
+						async:false,
+						url:"/zxjx/vacation-requsition/selectPagesByCondition?requisitionBy=" + teacherId + "&role=" + role,
+						dataType:"json",
+						contentType:"application/json",
+						success:function (data) {
+							if (data) {
+								var html = [];
+								var pageHtml = [];
+								html.push(
+								'<thead>' +
+								'<tr>' +
+								'<th style="text-align: center;">请假时间从</th>' +
+								'<th style="text-align: center;">请假时间至</th>' +
+								'<th style="text-align: center;">状态</th>' +
+								'<th style="text-align: center;">操作</th>' +
+								'</tr>' +
+								'</thead>' +
+								'<tbody>'
+								)
+								for (var i = 0;i < data.result.content.length;i++) {
+									html.push("<tr>")
+									html.push("<td style='display: none'>" + data.result.content[i].id +"</td>")
+									html.push("<td>" + formatTime( + '/'+data.result.content[i].vacationTimeFrom+'/' ) +"</td>")
+									html.push("<td>" + formatTime( + '/'+data.result.content[i].vacationTimeTo+'/'  ) +"</td>")
+									html.push("<td>" + data.result.content[i].status +"</td>")
+									html.push( "<td class='btn-group'>" +
+											"<button class='btn btn-danger' style='width: 80px' onclick='back(" + data.result.content[i].id +")'>撤回</button>" +
+											"</td>")
+									html.push("</tr>")
+								}
+								html.push("</tbody>")
+								var teacherInfoTable = $("#vacationInfoTable");
+								teacherInfoTable.html(html.join(""));
+
+								pageHtml.push(
+										'<nav aria-label="Page navigation">' +
+										'<ul class="pagination">' +
+										'<li>' +
+										'<a aria-label="Previous">' +
+										'<span aria-hidden="true">&laquo;</span>' +
+										'</a>' +
+										'</li>');
+								for (var i = 0;i < data.result.totalPages;i++) {
+									var pageNum = i + 1;
+									pageHtml.push(' <li><a onclick="queryVacationByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+								}
+								pageHtml.push(
+										'<li>' +
+										'<a href="#" aria-label="Next">' +
+										'<span aria-hidden="true">&raquo;</span>' +
+										'</a>' +
+										'</li>' +
+										'</ul>' +
+										'</nav>');
+								$("#vacationPagination").html(pageHtml.join(""));
+							}
+						}
+					})
+				}
+				// 请假申请分页
+				queryVacationByPageNum = function(pageNum){
+					var teacherId = $("#t_id").val();
+					var role = "老师";
+					$.ajax({
+						type:"GET",
+						async:false,
+						url:"/zxjx/vacation-requsition/selectPagesByCondition?requisitionBy=" + teacherId + "&role=" + role + "&pageNum=" + pageNum,
+						dataType:"json",
+						contentType:"application/json",
+						success:function (data) {
+							if (data) {
+								var html = [];
+								var pageHtml = [];
+								html.push(
+										'<thead>' +
+										'<tr>' +
+										'<th style="text-align: center;">请假时间从</th>' +
+										'<th style="text-align: center;">请假时间至</th>' +
+										'<th style="text-align: center;">状态</th>' +
+										'<th style="text-align: center;">操作</th>' +
+										'</tr>' +
+										'</thead>' +
+										'<tbody>'
+								)
+								for (var i = 0;i < data.result.content.length;i++) {
+									html.push("<tr>");
+									html.push("<td style='display: none'>" + data.result.content[i].id +"</td>")
+									html.push("<td>" + formatTime( + '/'+data.result.content[i].vacationTimeFrom+'/' ) +"</td>")
+									html.push("<td>" + formatTime( + '/'+data.result.content[i].vacationTimeTo+'/'  ) +"</td>")
+									html.push("<td>" + data.result.content[i].status +"</td>")
+									html.push( "<td class='btn-group'>" +
+											"<button class='btn btn-danger' style='width: 80px' onclick='back(" + data.result.content[i].id +")'>撤回</button>" +
+											"</td>")
+									html.push("</tr>");
+								}
+								html.push("</tbody>")
+								var teacherInfoTable = $("#vacationInfoTable");
+								teacherInfoTable.html(html.join(""));
+
+							}
+						}
+					})
+				}
+				// 撤回请假
+				back = function (id) {
+					$.ajax({
+						async:false,
+						type:"POST",
+						url:"/zxjx/vacation-requsition/cancle?vacationRequsitionId=" + id,
+						dataType:"json",
+						processData:false,
+						contentType:false,
+						success:function (data) {
+							alert(data.message);
+							initVacations();
+						}
+					})
+				}
+
+				// 格式化时间
+				function formatTime(date) {
+					var result = date.substr(3,10);
+					return result;
+				}
+
+				// 初始化所有数据
+				function initResults() {
+					initCourses();
+					initClasses();
+					initVacations();
+				}
+				initResults();
+			})
+		</script>
+	  </body>
+</html>

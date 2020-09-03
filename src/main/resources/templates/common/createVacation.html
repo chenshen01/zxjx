@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	 <head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="x-ua-compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+	    <link rel="stylesheet" href="../js/css/bootstrap.min.css" >
+		<link rel="stylesheet" href="../js/css/bootstrap.css">
+		<link rel="stylesheet" href="../js/css/bootstrap-theme.css"/>
+		<link rel="stylesheet" href="../js/css/bootstrap-theme.min.css"/>
+		<style>
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			#vacationBody{
+				position: absolute;
+				margin-top: 10%;
+				margin-left: 25%;
+			}
+		</style>
+	  </head>
+	  <body>
+		<header>
+			<nav class="navbar navbar-default navbar-inverse row">
+			  <div class="container-fluid">
+			    <div class="navbar-header col-lg-3">
+			      <p class="navbar-brand" href="#">
+			             <h3 style="color: white;">蔚洁在线教育</h3>
+			       </p>
+			    </div>
+			  </div>
+			</nav>
+		</header> 
+		<div id="registerBody" class="row">
+			<div id = "vacationBody" class="col-lg-10 col-lg-offset-2">
+				<form class="form-horizontal" role="form" id="becomeStudentInfoForm" enctype="multipart/form-data">
+				  <div class="form-group">
+				    <label  class="col-sm-2 control-label">请假时间从</label>
+				    <div class="col-sm-10" style="width: 400px;">
+				      <input id="vacationTimeFrom" type="text" class="form-control" placeholder="2020-05-04">
+				    </div>
+				  </div>
+				<div class="form-group">
+				  <label  class="col-sm-2 control-label">请假时间到</label>
+				  <div class="col-sm-10" style="width: 400px;">
+				    <input id="vacationTimeTo" type="text" class="form-control" placeholder="2020-05-04">
+				  </div>
+				</div>
+				<div th:if="${session.curStudent != null}" style="display: none">
+				    <input id="studentId" th:value="${session.curStudent.id}">
+				</div>
+				<div th:if="${session.curTeacher != null}" style="display: none">
+					<input id="teacherId" th:value="${session.curTeacher.id}">
+				</div>
+				<div class="form-group">
+				  <label  class="col-sm-2 control-label"/>
+				  <div class="col-sm-10" style="width: 400px;">
+						<p><button id="createVacationBtn" class="btn btn-success" style="width: 80px;">添加</button>
+					    <button id="createVacationBackBtn" class="btn btn-success" style="width: 80px;">返回</button></p>
+				  </div>
+				</div>
+				</form>
+			</div>
+		</div>
+		<script src="../js/js/jQuery-3.4.1.js"></script>
+		<script src="../js/js/bootstrap.js"></script>
+		<script src="../js/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			$(function () {
+				var role;
+				var requisitionBy;
+				function initRole(){
+					var studentId = $("#studentId").val();
+					var teacherId = $("#teacherId").val();
+					var requisitionBy;
+					if (studentId == undefined || studentId == "") {
+						if (teacherId != undefined && teacherId != "") {
+							requisitionBy = teacherId;
+							role = "老师";
+						}
+					} else {
+						requisitionBy = studentId;
+						role = "学生";
+					}
+				}
+				initRole();
+				// 创建请假申请
+				$("#createVacationBtn").click(function () {
+					var studentId = $("#studentId").val();
+					var teacherId = $("#teacherId").val();
+					var requisitionBy;
+					if (studentId == undefined || studentId == "") {
+						if (teacherId != undefined && teacherId != "") {
+							requisitionBy = teacherId;
+						}
+					} else {
+						requisitionBy = studentId;
+					}
+					var vacationTimeFrom = $("#vacationTimeFrom").val();
+					var vacationTimeTo = $("#vacationTimeTo").val();
+
+					var vacationInfo = new FormData();
+					vacationInfo.append("requisitionBy",requisitionBy);
+					vacationInfo.append("role",role);
+					vacationInfo.append("vacationTimeFrom",vacationTimeFrom);
+					vacationInfo.append("vacationTimeTo",vacationTimeTo);
+					// to-do 校验
+					if (vacationTimeFrom.trim() == "" || vacationTimeTo.trim() == "") {
+						alert("请检查填写的日期");
+						return;
+					}
+					$.ajax({
+						async:false,
+						type:"POST",
+						url:"/zxjx/vacation-requsition/createVacationRequsition",
+						dataType:"json",
+						processData:false,
+						contentType:false,
+						data:vacationInfo,
+						success:function (data) {
+							alert(data.message);
+						}
+					})
+					return false;
+				})
+
+
+
+				// 返回
+				$("#createVacationBackBtn").click(function () {
+					if (role == "老师") {
+						$.ajax({
+							async:false,
+							type:"GET",
+							url:"/teacher/backToGetTeacherMain",
+							dataType:"json",
+							processData:false,
+							contentType:false,
+							success:function (data) {
+								if (data) {
+									window.location.href = "/teacher/getTeacherMain"
+								}
+							},
+							xhrFields: {
+								withCredentials: true
+							}
+						})
+						return false;
+					}
+				    if (role == "学生") {
+
+					}
+				})
+			})
+		</script>
+	  </body>
+</html>

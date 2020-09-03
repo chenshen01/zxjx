@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	 <head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="x-ua-compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+	    <link rel="stylesheet" href="js/css/bootstrap.min.css" >
+		<link rel="stylesheet" href="js/css/bootstrap.css">
+		<link rel="stylesheet" href="js/css/bootstrap-theme.css"/>
+		<link rel="stylesheet" href="js/css/bootstrap-theme.min.css"/>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	  </head>
+	  <body>
+		<input th:value="${session.curTeacher.nickName}">
+	  </body>
+</html>

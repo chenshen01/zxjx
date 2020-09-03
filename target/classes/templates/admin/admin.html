@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="js/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="js/css/bootstrap.css">
+    <link rel="stylesheet" href="js/css/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="js/css/bootstrap-theme.min.css"/>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #teaPagination{
+            position: absolute;
+            margin-top: 30%;
+            margin-left: 45%;
+        }
+        #teaSendSalary{
+            position: absolute;
+            margin-top: -6%;
+            margin-left: 33%;
+            width: 400px;
+            display: none;
+        }
+        #stuPagination{
+            position: absolute;
+            margin-top: 30%;
+            margin-left: 45%;
+        }
+        #courseClassPagination {
+            position: absolute;
+            margin-top: 30%;
+            margin-left: 45%;
+        }
+        #coursePagination{
+            position: absolute;
+            margin-top: 38%;
+            margin-left: 45%;
+        }
+        #classesPagination{
+            position: absolute;
+            margin-top: 35%;
+            margin-left: 45%;
+        }
+        #vacationPagination{
+            position: absolute;
+            margin-top: 30%;
+            margin-left: 45%;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-default navbar-inverse row">
+        <div class="navbar-header col-lg-3">
+            <p class="navbar-brand">
+            <h3 style="color: white;">蔚洁在线教育</h3>
+            </p>
+        </div>
+
+        <div class="navbar-header col-lg-1 col-lg-offset-8" style="top:15px;">
+            <button class="btn btn-danger" id="logoutbtn">退出</button>
+        </div>
+    </nav>
+</header>
+<div id="teaSendSalary">
+    <div class="input-group input-group-lg" style="padding: 5px; margin: 5px;">
+        <span id="confirmSent" class="input-group-addon">发工资</span>
+        <input id ="teaSendSalaryInfo" type="text" class="form-control" placeholder="金额" aria-describedby="sizing-addon1">
+    </div>
+</div>
+<div id="registerBody" class="row">
+    <div class="col-lg-2">
+        <ul class="list-group" style="text-align: center;">
+            <li id="teacherManage" class="list-group-item"><button class="btn btn-success" style="width: 150px;">老师信息管理</button></li>
+            <li id="studentManage" class="list-group-item"><button class="btn btn-success"  style="width: 150px;">学生信息管理</button></li>
+            <li id="courseClassManage" class="list-group-item"><button class="btn btn-success"  style="width: 150px;">课程种类管理</button></li>
+            <li id="courseManage" class="list-group-item"><button class="btn btn-success"  style="width: 150px;">课程信息管理</button></li>
+            <li id="classManage" class="list-group-item"><button class="btn btn-success"  style="width: 150px;">班级信息管理</button></li>
+            <li id="adjustManage" class="list-group-item"><button class="btn btn-success"  style="width: 150px;">调课申请管理</button></li>
+            <li id="vacationManage" class="list-group-item"><button class="btn btn-success"  style="width: 150px;">请假申请管理</button></li>
+            <li id="orderManage" class="list-group-item"><button class="btn btn-success"  style="width: 150px;">订单信息管理</button></li>
+        </ul>
+    </div>
+    <div class="col-lg-10">
+        <!-- 平台信息 -->
+        <div id="platformInfo" style="display: block;">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    平台总收益(元)
+                </div>
+                <div class="panel-footer"><p id="account"></p></div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    平台老师数总计
+                </div>
+                <div class="panel-footer"><p id="sumTeacher"></p></div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    平台学生数总计
+                </div>
+                <div class="panel-footer"><p id="sumStudent"></p></div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    平台课程数总计
+                </div>
+                <div class="panel-footer"><p id="sumCourse"></p></div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    平台班级数总计
+                </div>
+                <div class="panel-footer"><p id="sumClasses"></p></div>
+            </div>
+        </div>
+        <!-- 老师信息管理-->
+        <div id="teacherInfo" style="display: none;">
+            <div class="panel panel-default">
+                <div class="panel-heading">老师信息管理</div>
+                <table id="teacherInfoTable" class="table" style="text-align: center;">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">教工号</th>
+                        <th style="width: 50px; text-align: center;">名称</th>
+                        <th style="width: 50px; text-align: center;">昵称</th>
+                        <th style="width: 80px; text-align: center;">电话</th>
+                        <th style="width: 80px; text-align: center;">qq</th>
+                        <th style="width: 80px; text-align: center;">邮箱</th>
+                        <th style="width: 80px; text-align: center;">密码</th>
+                        <th style="width: 80px; text-align: center;">曾任教地</th>
+                        <th style="width: 120px; text-align: center;">简历</th>
+                        <th style="width: 50px; text-align: center;">状态</th>
+                        <th style="width: 20px; text-align: center;">性别</th>
+                        <th style="width: 30px; text-align: center;">工资</th>
+                        <th style="width:100px;text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 学生信息管理-->
+        <div id="studentInfo" style="display: none;">
+            <div class="panel panel-default">
+                <div class="panel-heading">学生信息管理</div>
+                <table id="studentInfoTable" class="table" style="text-align: center;">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">学号</th>
+                        <th style="width: 50px; text-align: center;">名称</th>
+                        <th style="width: 50px; text-align: center;">昵称</th>
+                        <th style="width: 90px; text-align: center;">电话</th>
+                        <th style="width: 90px; text-align: center;">qq</th>
+                        <th style="width: 90px; text-align: center;">邮箱</th>
+                        <th style="width: 40px; text-align: center;">性别</th>
+                        <th style="width: 90px; text-align: center;">密码</th>
+                        <th style="width: 60px; text-align: center;">学校</th>
+                        <th style="width: 40px; text-align: center;">状态</th>
+                        <th style="width: 50px; text-align: center;">账户</th>
+                        <th style="width:100px;text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 课程种类 -->
+        <div id="courseClassInfo" style="display: none;">
+            <div class="panel panel-default">
+                <div class="panel-heading">课程种类管理</div>
+                <div class="row">
+                    <div class="col-sm-2 col-md-2">
+                        <div class="thumbnail">
+                            <div class="caption" style="text-align: center;">
+                                <input style="width: 80px; height: 40px;"/>
+                                <button class="btn btn-default" style="width: 60px;">增加</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-md-2">
+                        <div class="thumbnail">
+                            <div class="caption" style="text-align: center;">
+                                <input name ="courseClassName" style="width: 80px; height: 40px;"/>
+                                <button class="btn btn-default">修改</button>
+                                <button class="btn btn-default">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 课程信息管理-->
+        <div id="courseInfo" style="display: none;">
+
+        </div>
+        <!-- 班级信息管理-->
+        <div id="classInfo" style="display: none;">
+
+        </div>
+        <!-- 调课申请管理-->
+        <div id="adjustClassInfo" style="display: none;">
+            <div class="panel panel-default">
+                <div class="panel-heading">调课申请管理</div>
+                <table id="adjustClassInfoTable" class="table" style="text-align: center;">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">调课人</th>
+                        <th style="text-align: center;">角色</th>
+                        <th style="text-align: center;">课程</th>
+                        <th style="text-align: center;">调课前时间</th>
+                        <th style="text-align: center;">调整时间</th>
+                        <th style="text-align: center;">状态</th>
+                        <th style="text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>陈升</td>
+                            <td>老师</td>
+                            <td>JAVA</td>
+                            <td>2020-05-03</td>
+                            <td>2020-05-04</td>
+                            <td>等待审批</td>
+                            <td><a>审批</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 请假申请管理-->
+        <div id="vacationInfo" style="display: none;">
+            <div class="panel panel-default">
+                <div class="panel-heading">请假申请管理</div>
+                <table id="vacationInfoTable" class="table" style="text-align: center;">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">申请人</th>
+                        <th style="text-align: center;">角色</th>
+                        <th style="text-align: center;">请假时间从</th>
+                        <th style="text-align: center;">请假时间至</th>
+                        <th style="text-align: center;">状态</th>
+                        <th style="text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>陈升</td>
+                        <td>老师</td>
+                        <td>2020-05-03</td>
+                        <td>2020-05-04</td>
+                        <td>等待审批</td>
+                        <td><a>审批</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 订单信息管理-->
+        <div id="orderInfo" style="display: none;">
+            <div class="panel panel-default">
+                <div class="panel-heading">订单管理</div>
+                <table id="ordersInfoTable" class="table" style="text-align: center;">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">订单编号</th>
+                        <th style="text-align: center;">购买人</th>
+                        <th style="text-align: center;">购买人手机号</th>
+                        <th style="text-align: center;">总金额</th>
+                        <th style="text-align: center;">订单状态</th>
+                        <th style="text-align: center;">创建时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><a>zxjx000001</a></td>
+                        <td>陈升</td>
+                        <td>15949641178</td>
+                        <td>2</td>
+                        <td>已付款</td>
+                        <td>2020-05-04</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="teaPagination" style="display: none">
+
+    </div>
+
+    <div id="stuPagination" style="display: none">
+
+    </div>
+
+    <div id="courseClassPagination" style="display: none">
+
+    </div>
+
+    <div id="coursePagination" style="display: none">
+
+    </div>
+
+    <div id="classesPagination" style="display: none">
+
+    </div>
+    <div id="vacationPagination" style="display: none">
+
+    </div>
+
+    <div th:if="${session.curAdmin != null}" style="display: none">
+        <input id="adminId" th:value="${session.curAdmin.id}">
+    </div>
+</div>
+<script src="js/js/jQuery-3.4.1.js"></script>
+<script src="js/js/bootstrap.js"></script>
+<script src="js/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#teacherManage").click(function(){
+            $("#teacherInfo").css("display","block");
+            $("#platformInfo").css("display","none");
+            $("#studentInfo").css("display","none");
+            $("#courseClassInfo").css("display","none");
+            $("#courseInfo").css("display","none");
+            $("#classInfo").css("display","none");
+            $("#adjustClassInfo").css("display","none");
+            $("#vacationInfo").css("display","none");
+            $("#orderInfo").css("display","none");
+
+            $("#teaPagination").css("display","block");
+            $("#stuPagination").css("display","none");
+            $("#courseClassPagination").css("display","none");
+            $("#coursePagination").css("display","none");
+            $("#classesPagination").css("display","none");
+            $("#vacationPagination").css("display","none");
+
+        })
+
+        $("#studentManage").click(function(){
+            $("#studentInfo").css("display","block");
+            $("#platformInfo").css("display","none");
+            $("#teacherInfo").css("display","none");
+            $("#courseClassInfo").css("display","none");
+            $("#courseInfo").css("display","none");
+            $("#classInfo").css("display","none");
+            $("#adjustClassInfo").css("display","none");
+            $("#vacationInfo").css("display","none");
+            $("#orderInfo").css("display","none");
+
+            $("#teaPagination").css("display","none");
+            $("#stuPagination").css("display","block");
+            $("#courseClassPagination").css("display","none");
+            $("#coursePagination").css("display","none");
+            $("#classesPagination").css("display","none");
+            $("#vacationPagination").css("display","none");
+        })
+
+        $("#courseClassManage").click(function(){
+            $("#courseClassInfo").css("display","block");
+            $("#platformInfo").css("display","none");
+            $("#teacherInfo").css("display","none");
+            $("#studentInfo").css("display","none");
+            $("#courseInfo").css("display","none");
+            $("#classInfo").css("display","none");
+            $("#adjustClassInfo").css("display","none");
+            $("#vacationInfo").css("display","none");
+            $("#orderInfo").css("display","none");
+
+            $("#teaPagination").css("display","none");
+            $("#stuPagination").css("display","none");
+            $("#courseClassPagination").css("display","block");
+            $("#coursePagination").css("display","none");
+            $("#classesPagination").css("display","none");
+            $("#vacationPagination").css("display","none");
+        })
+
+        $("#courseManage").click(function(){
+            $("#courseInfo").css("display","block");
+            $("#platformInfo").css("display","none");
+            $("#teacherInfo").css("display","none");
+            $("#studentInfo").css("display","none");
+            $("#courseClassInfo").css("display","none");
+            $("#classInfo").css("display","none");
+            $("#adjustClassInfo").css("display","none");
+            $("#vacationInfo").css("display","none");
+            $("#orderInfo").css("display","none");
+
+            $("#teaPagination").css("display","none");
+            $("#stuPagination").css("display","none");
+            $("#courseClassPagination").css("display","none");
+            $("#coursePagination").css("display","block");
+            $("#classesPagination").css("display","none");
+            $("#vacationPagination").css("display","none");
+        })
+
+        $("#classManage").click(function(){
+            $("#classInfo").css("display","block");
+            $("#platformInfo").css("display","none");
+            $("#teacherInfo").css("display","none");
+            $("#studentInfo").css("display","none");
+            $("#courseClassInfo").css("display","none");
+            $("#courseInfo").css("display","none");
+            $("#adjustClassInfo").css("display","none");
+            $("#vacationInfo").css("display","none");
+            $("#orderInfo").css("display","none");
+
+            $("#teaPagination").css("display","none");
+            $("#stuPagination").css("display","none");
+            $("#courseClassPagination").css("display","none");
+            $("#coursePagination").css("display","none");
+            $("#classesPagination").css("display","block");
+            $("#vacationPagination").css("display","none");
+        })
+
+        $("#adjustManage").click(function(){
+            $("#adjustClassInfo").css("display","block");
+            $("#platformInfo").css("display","none");
+            $("#teacherInfo").css("display","none");
+            $("#studentInfo").css("display","none");
+            $("#courseClassInfo").css("display","none");
+            $("#courseInfo").css("display","none");
+            $("#classInfo").css("display","none");
+            $("#vacationInfo").css("display","none");
+            $("#orderInfo").css("display","none");
+
+            $("#teaPagination").css("display","none");
+            $("#stuPagination").css("display","none");
+            $("#courseClassPagination").css("display","none");
+            $("#coursePagination").css("display","none");
+            $("#classesPagination").css("display","none");
+            $("#vacationPagination").css("display","none");
+        })
+
+        $("#vacationManage").click(function(){
+            $("#vacationInfo").css("display","block");
+            $("#platformInfo").css("display","none");
+            $("#teacherInfo").css("display","none");
+            $("#studentInfo").css("display","none");
+            $("#courseClassInfo").css("display","none");
+            $("#courseInfo").css("display","none");
+            $("#classInfo").css("display","none");
+            $("#adjustClassInfo").css("display","none");
+            $("#orderInfo").css("display","none");
+
+            $("#teaPagination").css("display","none");
+            $("#stuPagination").css("display","none");
+            $("#courseClassPagination").css("display","none");
+            $("#coursePagination").css("display","none");
+            $("#classesPagination").css("display","none");
+            $("#vacationPagination").css("display","block");
+        })
+
+        $("#orderManage").click(function(){
+            $("#orderInfo").css("display","block");
+            $("#platformInfo").css("display","none");
+            $("#teacherInfo").css("display","none");
+            $("#studentInfo").css("display","none");
+            $("#courseClassInfo").css("display","none");
+            $("#courseInfo").css("display","none");
+            $("#classInfo").css("display","none");
+            $("#adjustClassInfo").css("display","none");
+            $("#vacationInfo").css("display","none");
+
+            $("#teaPagination").css("display","none");
+            $("#stuPagination").css("display","none");
+            $("#courseClassPagination").css("display","none");
+            $("#coursePagination").css("display","none");
+            $("#classesPagination").css("display","none");
+            $("#vacationPagination").css("display","block");
+        })
+
+        // 获取平台信息
+        function getPlatformInfo(){
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/platform/selectAll",
+                dataType:"json",
+                contentType:"application/json",
+                //data:JSON.stringify(loginInfo),
+                success:function (data) {
+                    if (data) {
+                        $("#account").html(data.result.account);
+                        $("#sumStudent").html(data.result.sumStudent);
+                        $("#sumCourse").html(data.result.sumCourse);
+                        $("#sumTeacher").html(data.result.sumTeacher);
+                        $("#sumClasses").html(data.result.sumClasses);
+                    }
+                }
+            })
+            // return false;
+        }
+
+        // 获得老师信息
+        function getTeacherInfo() {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/teacher/selectPagesByCondition",
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                       var html = [];
+                       var pageHtml = [];
+                       var man = "男";
+                       var women = "女";
+                       var personFile = "个人简历";
+                       html.push(
+                       "<thead>" +
+                       "<tr>" +
+                       "<th style='width: 20px; text-align: center;'>教工号</th>" +
+                            "<th style='width: 50px; text-align: center;'>名称</th>" +
+                            "<th style='width: 50px; text-align: center;'>昵称</th>" +
+                            "<th style='width: 50px; text-align: center;'>电话</th>" +
+                            "<th style='width: 40px; text-align: center;'>qq</th>" +
+                            "<th style='width: 40px; text-align: center;'>邮箱</th>" +
+                            "<th style='width: 40px; text-align: center;'>密码</th>" +
+                            "<th style='width: 80px; text-align: center;'>曾任教地</th>" +
+                            "<th style='width: 100px; text-align: center;'>简历</th>" +
+                            "<th style='width: 60px; text-align: center;'>状态</th>" +
+                            "<th style='width: 20px; text-align: center;'>性别</th>" +
+                            "<th style='width: 30px; text-align: center;'>工资</th>" +
+                            "<th style='width:100px;text-align: center;'>操作</th>" +
+                            "</tr>"+
+                            "</thead>" +
+                            "<tbody>"
+                       )
+                       for (var i = 0;i < data.result.content.length;i++) {
+                           html.push("<tr class='clearTr'>");
+                           html.push("<td style='display: none'>" + data.result.content[i].id +"</td>")
+                           html.push("<td style='width: 20px'>" + data.result.content[i].teacherCode +"</td>")
+                           html.push("<td style='width: 20px'>" + data.result.content[i].name +"</td>")
+                           html.push("<td style='width: 20px'>" + data.result.content[i].nickName +"</td>")
+                           html.push("<td style='width: 50px'>" + data.result.content[i].phone +"</td>")
+                           html.push("<td style='width: 40px'>" + data.result.content[i].qq +"</td>")
+                           html.push("<td style='width: 40px'>" + data.result.content[i].email +"</td>")
+                           html.push("<td style='width: 40px'>" + data.result.content[i].password +"</td>")
+                           html.push("<td style='width: 40px'>" + data.result.content[i].teachedPlace +"</td>")
+                           html.push("<td style='width: 50px'><a href='/zxjx/file/download?fileName="+ data.result.content[i].resume+"'>"+ personFile +"</a></td>")
+                           html.push("<td style='width: 20px'>" + data.result.content[i].status +"</td>")
+                           if (data.result.content[i].gender == 1) {
+                               html.push("<td style='width: 10px'><p>" + man +"</p></td>")
+                           } else {
+                               html.push("<td style='width: 10px'><p>" + women +"</p></td>")
+                           }
+                           html.push("<td style='width: 30px'>" + data.result.content[i].salary +"</td>")
+                           html.push( "<td class='btn-group'>" +
+                               "<button class='btn-success' onclick='lookTeaInfo(" + data.result.content[i].id +")' style='width: 50px;'>查看</button>" +
+                               "<button class='btn-success' onclick='auditTea(" + data.result.content[i].id +")' style='width: 50px;'>通过</button>" +
+                               "<button class='btn-danger'  onclick='deleteTea(" + data.result.content[i].id +")' style='width: 50px;'>删除</button>" +
+                               "<button class='btn-success' onclick='sentSalary(" + data.result.content[i].id +")' style='width: 50px;'>发工资</button>" +
+                               "</td>")
+                           html.push("</tr>");
+                       }
+                       html.push("</tbody>")
+                       var teacherInfoTable = $("#teacherInfoTable");
+                        teacherInfoTable.html(html.join(""));
+
+                        pageHtml.push(
+                            '<nav aria-label="Page navigation">' +
+                                '<ul class="pagination">' +
+                                    '<li>' +
+                                       '<a aria-label="Previous">' +
+                                         '<span aria-hidden="true">&laquo;</span>' +
+                                       '</a>' +
+                                     '</li>');
+                        for (var i = 0;i < data.result.totalPages;i++) {
+                            var pageNum = i + 1;
+                            pageHtml.push(' <li><a onclick="queryByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+                        }
+                        pageHtml.push(
+                        '<li>' +
+                        '<a href="#" aria-label="Next">' +
+                            '<span aria-hidden="true">&raquo;</span>' +
+                        '</a>' +
+                        '</li>' +
+                        '</ul>' +
+                        '</nav>');
+                        $("#teaPagination").html(pageHtml.join(""));
+                    }
+                }
+            })
+        }
+
+        // 查看老师详情
+        lookTeaInfo = function(teacherId){
+            window.location.href = "/admin/getTeacherDetail?id=" + teacherId;
+        }
+
+        // 通过老师的申请
+        auditTea = function(teacherId){
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/teacher/auditPass?id=" + teacherId,
+                dataType:"json",
+                contentType:"application/json",
+                //data:JSON.stringify(loginInfo),
+                success:function (data) {
+                    if (data) {
+                      alert(data.message);
+                      getTeacherInfo();
+                    }
+                }
+            })
+        }
+
+        // 删除老师
+        deleteTea = function(teacherId){
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/teacher/delete/" + teacherId,
+                dataType:"json",
+                contentType:"application/json",
+                //data:JSON.stringify(loginInfo),
+                success:function (data) {
+                    if (data) {
+                        alert("删除成功");
+                        getTeacherInfo();
+                    }
+                }
+            })
+        }
+
+        // 发工资
+        sentSalary = function(teacherId){
+            $("#teaSendSalary").css("display","block");
+            $("#confirmSent").click(function(){
+                var salary = $("#teaSendSalaryInfo").val();
+                if (salary == "") {
+                    alert("请输入金额");
+                    return;
+                }
+                if (salary <= 0) {
+                    alert("请输入有效的金额");
+                    return;
+                }
+                $.ajax({
+                    type:"POST",
+                    async:false,
+                    url:"/zxjx/teacher/sendSalary?id=" + teacherId + "&salary=" + salary,
+                    dataType:"json",
+                    contentType:"application/json",
+                    success:function (data) {
+                        if (data) {
+                            if (data.code == 200) {
+                                alert("已成功发工资");
+                                $("#teaSendSalary").css("display","none");
+                            } else {
+                                alert(data.message);
+                                $("#teaSendSalary").css("display","none");
+                            }
+                            getPlatformInfo();
+                            getTeacherInfo();
+                        }
+                    }
+                })
+            })
+        }
+
+        $("#logoutbtn").click(function () {
+            $(".clearTr").remove();
+        })
+
+        // 老师分页请求
+        queryByPageNum = function(pageNum) {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/teacher/selectPagesByCondition?pageNum=" + pageNum,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        var html = [];
+                        var man = "男";
+                        var women = "女";
+                        var personFile = "个人简历";
+                        html.push(
+                            "<thead>" +
+                            "<tr>" +
+                            "<th style='width: 20px; text-align: center;'>教工号</th>" +
+                            "<th style='width: 50px; text-align: center;'>名称</th>" +
+                            "<th style='width: 50px; text-align: center;'>昵称</th>" +
+                            "<th style='width: 50px; text-align: center;'>电话</th>" +
+                            "<th style='width: 40px; text-align: center;'>qq</th>" +
+                            "<th style='width: 40px; text-align: center;'>邮箱</th>" +
+                            "<th style='width: 40px; text-align: center;'>密码</th>" +
+                            "<th style='width: 80px; text-align: center;'>曾任教地</th>" +
+                            "<th style='width: 100px; text-align: center;'>简历</th>" +
+                            "<th style='width: 60px; text-align: center;'>状态</th>" +
+                            "<th style='width: 20px; text-align: center;'>性别</th>" +
+                            "<th style='width: 30px; text-align: center;'>工资</th>" +
+                            "<th style='width:100px;text-align: center;'>操作</th>" +
+                            "</tr>"+
+                            "</thead>" +
+                            "<tbody>"
+                        )
+                        for (var i = 0;i < data.result.content.length;i++) {
+                            html.push("<tr class='clearTr'>");
+                            html.push("<td style='display: none'>" + data.result.content[i].id +"</td>")
+                            html.push("<td style='width: 20px'>" + data.result.content[i].teacherCode +"</td>")
+                            html.push("<td style='width: 20px'>" + data.result.content[i].name +"</td>")
+                            html.push("<td style='width: 20px'>" + data.result.content[i].nickName +"</td>")
+                            html.push("<td style='width: 50px'>" + data.result.content[i].phone +"</td>")
+                            html.push("<td style='width: 40px'>" + data.result.content[i].qq +"</td>")
+                            html.push("<td style='width: 40px'>" + data.result.content[i].email +"</td>")
+                            html.push("<td style='width: 40px'>" + data.result.content[i].password +"</td>")
+                            html.push("<td style='width: 40px'>" + data.result.content[i].teachedPlace +"</td>")
+                            html.push("<td style='width: 50px'><a href='/zxjx/file/download?fileName="+ data.result.content[i].resume+"'>"+ personFile +"</a></td>")
+                            html.push("<td style='width: 20px'>" + data.result.content[i].status +"</td>")
+                            if (data.result.content[i].gender == 1) {
+                                html.push("<td style='width: 10px'><p>" + man +"</p></td>")
+                            } else {
+                                html.push("<td style='width: 10px'><p>" + women +"</p></td>")
+                            }
+                            html.push("<td style='width: 30px'>" + data.result.content[i].salary +"</td>")
+                            html.push( "<td class='btn-group'>" +
+                                "<button class='btn-success' onclick='lookTeaInfo(" + data.result.content[i].id +")' style='width: 50px;'>查看</button>" +
+                                "<button class='btn-success' onclick='auditTea(" + data.result.content[i].id +")' style='width: 50px;'>通过</button>" +
+                                "<button class='btn-danger'  onclick='deleteTea(" + data.result.content[i].id +")' style='width: 50px;'>删除</button>" +
+                                "<button class='btn-success' onclick='sentSalary(" + data.result.content[i].id +")' style='width: 50px;'>发工资</button>" +
+                                "</td>")
+                            html.push("</tr>");
+                        }
+                        html.push("</tbody>")
+                        var teacherInfoTable = $("#teacherInfoTable");
+                        teacherInfoTable.html(html.join(""));
+                    }
+                }
+            })
+        }
+
+        // 查看学生具体信息
+        lookStuInfo = function(studentId){
+            window.location.href = "/admin/getStudentDetail?id=" + studentId;
+        }
+
+        // 删除学生
+        deleteStu = function (studentId) {
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/student/delete/" + studentId,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        alert("删除成功");
+                        getStudentInfo();
+                    }
+                }
+            })
+        }
+
+        // 获取平台学生信息
+        function getStudentInfo() {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/student/selectPagesByCondition",
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        var html = [];
+                        var pageHtml = [];
+                        var man = "男";
+                        var women = "女";
+                        html.push(
+                        "<thead>" +
+                            "<tr>" +
+                            "<th style='width: 50px; text-align: center;'>学号</th>" +
+                            "<th style='width: 50px; text-align: center;'>名称</th>" +
+                            "<th style='width: 50px; text-align: center;'>昵称</th>" +
+                            "<th style='width: 90px; text-align: center;'>电话</th>" +
+                            "<th style='width: 90px; text-align: center;'>qq</th>" +
+                            "<th style='width: 90px; text-align: center;'>邮箱</th>" +
+                            '<th style="width: 40px; text-align: center;">性别</th>' +
+                            '<th style="width: 90px; text-align: center;">密码</th>' +
+                            '<th style="width: 60px; text-align: center;">学校</th>' +
+                            '<th style="width: 40px; text-align: center;">状态</th>' +
+                            '<th style="width: 50px; text-align: center;">账户</th>' +
+                            '<th style="width:100px;text-align: center;">操作</th>' +
+                            '</tr>' +
+                         "</thead>" +
+                         "<tbody>"
+                        )
+                        for (var i = 0;i < data.result.content.length;i++) {
+                            html.push("<tr class='clearStuinfo'>");
+                            html.push("<td style='display: none'>" + data.result.content[i].id +"</td>")
+                            html.push("<td style='width: 50px'>" + data.result.content[i].studyCode +"</td>")
+                            html.push("<td style='width: 50px'>" + data.result.content[i].name +"</td>")
+                            html.push("<td style='width: 50px'>" + data.result.content[i].nickName +"</td>")
+                            html.push("<td style='width: 90px'>" + data.result.content[i].phone +"</td>")
+                            html.push("<td style='width: 90px'>" + data.result.content[i].qq +"</td>")
+                            html.push("<td style='width: 90px'>" + data.result.content[i].email +"</td>")
+                            if (data.result.content[i].gender == 1) {
+                                html.push("<td style='width: 10px'><p>" + man +"</p></td>")
+                            } else {
+                                html.push("<td style='width: 10px'><p>" + women +"</p></td>")
+                            }
+                            html.push("<td style='width: 50px'>" + data.result.content[i].password +"</td>")
+                            html.push("<td style='width: 40px'>" + data.result.content[i].school +"</td>")
+                            html.push("<td style='width: 20px'>" + data.result.content[i].onlineStatus +"</td>")
+                            html.push("<td style='width: 30px'>" + data.result.content[i].account +"</td>")
+                            html.push( "<td class='btn-group'>" +
+                                "<button class='btn-success' onclick='lookStuInfo(" + data.result.content[i].id +")' style='width: 50px;'>查看</button>" +
+                                "<button class='btn-danger'  onclick='deleteStu(" + data.result.content[i].id +")' style='width: 50px;'>删除</button>" +
+                                "</td>")
+                            html.push("</tr>");
+                        }
+                        html.push("</tbody>")
+                        var studentInfoTable = $("#studentInfoTable");
+                        studentInfoTable.html(html.join(""));
+
+                        pageHtml.push(
+                            '<nav aria-label="Page navigation">' +
+                            '<ul class="pagination">' +
+                            '<li>' +
+                            '<a aria-label="Previous">' +
+                            '<span aria-hidden="true">&laquo;</span>' +
+                            '</a>' +
+                            '</li>');
+                        for (var i = 0;i < data.result.totalPages;i++) {
+                            var pageNum = i + 1;
+                            pageHtml.push(' <li><a onclick="queryStuByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+                        }
+                        pageHtml.push(
+                            '<li>' +
+                            '<a href="#" aria-label="Next">' +
+                            '<span aria-hidden="true">&raquo;</span>' +
+                            '</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '</nav>');
+                        $("#stuPagination").html(pageHtml.join(""));
+                    }
+                }
+            })
+        }
+
+        // 学生分页请求
+        queryStuByPageNum = function (pageNum) {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/student/selectPagesByCondition?pageNum=" + pageNum,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        var html = [];
+                        var pageHtml = [];
+                        var man = "男";
+                        var women = "女";
+                        html.push(
+                            "<thead>" +
+                            "<tr>" +
+                            "<th style='width: 50px; text-align: center;'>学号</th>" +
+                            "<th style='width: 50px; text-align: center;'>名称</th>" +
+                            "<th style='width: 50px; text-align: center;'>昵称</th>" +
+                            "<th style='width: 90px; text-align: center;'>电话</th>" +
+                            "<th style='width: 90px; text-align: center;'>qq</th>" +
+                            "<th style='width: 90px; text-align: center;'>邮箱</th>" +
+                            '<th style="width: 40px; text-align: center;">性别</th>' +
+                            '<th style="width: 90px; text-align: center;">密码</th>' +
+                            '<th style="width: 60px; text-align: center;">学校</th>' +
+                            '<th style="width: 40px; text-align: center;">状态</th>' +
+                            '<th style="width: 50px; text-align: center;">账户</th>' +
+                            '<th style="width:100px;text-align: center;">操作</th>' +
+                            '</tr>' +
+                            "</thead>" +
+                            "<tbody>"
+                        )
+                        for (var i = 0;i < data.result.content.length;i++) {
+                            html.push("<tr class='clearStuinfo'>");
+                            html.push("<td style='display: none'>" + data.result.content[i].id +"</td>")
+                            html.push("<td style='width: 50px'>" + data.result.content[i].studyCode +"</td>")
+                            html.push("<td style='width: 50px'>" + data.result.content[i].name +"</td>")
+                            html.push("<td style='width: 50px'>" + data.result.content[i].nickName +"</td>")
+                            html.push("<td style='width: 90px'>" + data.result.content[i].phone +"</td>")
+                            html.push("<td style='width: 90px'>" + data.result.content[i].qq +"</td>")
+                            html.push("<td style='width: 90px'>" + data.result.content[i].email +"</td>")
+                            if (data.result.content[i].gender == 1) {
+                                html.push("<td style='width: 10px'><p>" + man +"</p></td>")
+                            } else {
+                                html.push("<td style='width: 10px'><p>" + women +"</p></td>")
+                            }
+                            html.push("<td style='width: 50px'>" + data.result.content[i].password +"</td>")
+                            html.push("<td style='width: 40px'>" + data.result.content[i].school +"</td>")
+                            html.push("<td style='width: 20px'>" + data.result.content[i].onlineStatus +"</td>")
+                            html.push("<td style='width: 30px'>" + data.result.content[i].account +"</td>")
+                            html.push( "<td class='btn-group'>" +
+                                "<button class='btn-success' onclick='lookStuInfo(" + data.result.content[i].id +")' style='width: 50px;'>查看</button>" +
+                                "<button class='btn-danger'  onclick='deleteStu(" + data.result.content[i].id +")' style='width: 50px;'>删除</button>" +
+                                "</td>")
+                            html.push("</tr>");
+                        }
+                        html.push("</tbody>")
+                        var studentInfoTable = $("#studentInfoTable");
+                        studentInfoTable.html(html.join(""));
+                    }
+                }
+            })
+        }
+
+        // 获取课程种类信息
+        function getcourseClassInfo() {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/course-class/selectPagesByCondition",
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    var html = [];
+                    var k = 0;
+                    var length = data.result.content.length + 1;
+                    html.push(
+                    '<div class="panel panel-default">' +
+                        '<div class="panel-heading">课程种类管理</div>' +
+                        '<div class="row">'
+                    )
+                    for (var i = 0; i < length ; i++) {
+                        if (i == 0) {
+                            html.push(
+                            '<div class="col-sm-2 col-md-2">' +
+                                '<div class="thumbnail">' +
+                                '<div class="caption" style="text-align: center;">' +
+                                '<input style="width: 80px; height: 40px;"/>' +
+                                '<button class="btn btn-default" style="width: 60px;" onclick="addCourseClass(this)">增加</button>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>'
+                            )
+                        } else {
+                            html.push(
+                            '<div class="col-sm-2 col-md-2">' +
+                                '<div class="thumbnail">' +
+                                '<div class="caption" style="text-align: center;">' +
+                                '<input name ="courseClassName" style="width: 80px; height: 40px; text-align: center" value="'+data.result.content[k].courseClassName+'"/>' +
+                                '<p><button class="btn btn-success" onclick="updateCourseClass('+ data.result.content[k].id +',\''+ data.result.content[k].courseClassName +'\',this)">修改</button>' +
+                                '<button class="btn btn-danger" onclick="deleteCourseClass('+ data.result.content[k].id +')">删除</button></p>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>'
+                            )
+                            k++;
+                        }
+                    }
+                    $("#courseClassInfo").html(html.join(""));
+                    var pageHtml = [];
+                    var pageCount = (data.result.totalSize + 1) % data.result.pageSize;
+                    var realPageSize;
+                    if (pageCount == 0) {
+                        realPageSize = (data.result.totalSize + 1) / data.result.pageSize;
+                    } else {
+                        realPageSize = (data.result.totalSize + 1) / data.result.pageSize + 1;
+                    }
+                    pageHtml.push(
+                        '<nav aria-label="Page navigation">' +
+                        '<ul class="pagination">' +
+                        '<li>' +
+                        '<a aria-label="Previous">' +
+                        '<span aria-hidden="true">&laquo;</span>' +
+                        '</a>' +
+                        '</li>');
+                    for (var i = 0;i < Math.floor(realPageSize) ;i++) {
+                        var pageNum = i + 1;
+                        pageHtml.push(' <li><a onclick="queryCourseClassByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+
+                    }
+                    pageHtml.push(
+                        '<li>' +
+                        '<a href="#" aria-label="Next">' +
+                        '<span aria-hidden="true">&raquo;</span>' +
+                        '</a>' +
+                        '</li>' +
+                        '</ul>' +
+                        '</nav>');
+                    $("#courseClassPagination").html(pageHtml.join(""));
+                }
+            })
+        }
+
+        // 删除课程类别
+        deleteCourseClass = function (courseClassId) {
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/course-class/delete/" + courseClassId,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        alert("删除成功");
+                        getcourseClassInfo();
+                    }
+                }
+            })
+        }
+
+        // 修改课程类别
+        updateCourseClass = function (courseClassId,oldCourseClassName,btn) {
+          var inputNode = btn.parentNode.parentNode.firstChild;
+          var newCourseClassName = inputNode.value;
+          if (oldCourseClassName == newCourseClassName) {
+              alert("请输入要修改的课程类别名");
+              return;
+          } else {
+              var courseClass = {
+                  "id":courseClassId,
+                  "courseClassName":newCourseClassName
+              }
+              $.ajax({
+                  type:"POST",
+                  async:false,
+                  url:"/zxjx/course-class/update",
+                  dataType:"json",
+                  contentType:"application/json",
+                  data:JSON.stringify(courseClass),
+                  success:function (data) {
+                    if (data.code == "200") {
+                        alert(data.message);
+                        getcourseClassInfo();
+                    }
+                  }
+              })
+          }
+        }
+
+        // 增加课程类别
+        addCourseClass = function (btn) {
+            var inputNode = btn.parentNode.firstChild;
+            var courseClassName = inputNode.value;
+            if (courseClassName == "") {
+                alert("请输入课程类别");
+                return;
+            }
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/course-class/insert?courseClassName=" + courseClassName,
+                dataType:"json",
+                contentType:"application/json",
+                //data:JSON.stringify(courseClass),
+                success:function (data) {
+                    if (data.code == "200") {
+                        alert(data.message);
+                        getcourseClassInfo();
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            })
+        }
+
+        // 课程类别分页查询
+        queryCourseClassByPageNum = function (pageNum) {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/course-class/selectPagesByCondition?PageNum=" + pageNum,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    var html = [];
+                    var k = 0;
+                    var length = data.result.content.length + 1;
+                    html.push(
+                        '<div class="panel panel-default">' +
+                        '<div class="panel-heading">课程种类管理</div>' +
+                        '<div class="row">'
+                    )
+                    for (var i = 0; i < length ; i++) {
+                        if (i == 0) {
+                            html.push(
+                                '<div class="col-sm-2 col-md-2">' +
+                                '<div class="thumbnail">' +
+                                '<div class="caption" style="text-align: center;">' +
+                                '<input style="width: 80px; height: 40px;"/>' +
+                                '<button class="btn btn-default" style="width: 60px;" onclick="addCourseClass(this)">增加</button>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>'
+                            )
+                        } else {
+                            html.push(
+                                '<div class="col-sm-2 col-md-2">' +
+                                '<div class="thumbnail">' +
+                                '<div class="caption" style="text-align: center;">' +
+                                '<input name ="courseClassName" style="width: 80px; height: 40px; text-align: center" value="'+data.result.content[k].courseClassName+'"/>' +
+                                '<p><button class="btn btn-success" onclick="updateCourseClass('+ data.result.content[k].id +',\''+ data.result.content[k].courseClassName +'\',this)">修改</button>' +
+                                '<button class="btn btn-danger" onclick="deleteCourseClass('+ data.result.content[k].id +')">删除</button></p>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>'
+                            )
+                            k++;
+                        }
+                    }
+                    $("#courseClassInfo").html(html.join(""));
+                }
+            })
+        }
+
+        // 初始化所有课程
+        function getCoursesInfo(){
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/courses/selectPagesByCondition",
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    var html = [];
+                    var length = data.result.content.length;
+                    for (var i = 0; i < length ; i++) {
+                        html.push(
+                            '<div class="col-sm-6 col-md-4" style="width: 300px">' +
+                            '<div class="thumbnail">' +
+                            '<img src=" '+ data.result.content[i].courseImage +'" style="height: 100px">' +
+                            '<div class="caption" style="text-align: center">' +
+                            '<h3>' + data.result.content[i].courseName + '</h3>' +
+                            '<p>' + data.result.content[i].teachedBy+ '</p>' +
+                            '<p><button class="btn btn-primary" role="button">查看</button>' +
+                            '<button class="btn btn-danger" role="button" onclick="deleteCourse(' + data.result.content[i].id +')">删除</button>'+
+                            '<button class="btn btn-success" role="button" onclick="auditCourse(' + data.result.content[i].id +')">通过</button>' +
+                            '<button class="btn btn-default" role="button" onclick="rejectCourse(' + data.result.content[i].id +')">拒绝</button></p>'+
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        )
+                    }
+                    $("#courseInfo").html(html.join(""));
+                    var pageHtml = [];
+                    var pageCount = data.result.totalSize % data.result.pageSize;
+                    var realPageSize;
+                    if (pageCount == 0) {
+                        realPageSize = data.result.totalSize  / data.result.pageSize;
+                    } else {
+                        realPageSize = data.result.totalSize / data.result.pageSize + 1;
+                    }
+                    pageHtml.push(
+                        '<nav aria-label="Page navigation">' +
+                        '<ul class="pagination">' +
+                        '<li>' +
+                        '<a aria-label="Previous">' +
+                        '<span aria-hidden="true">&laquo;</span>' +
+                        '</a>' +
+                        '</li>');
+                    for (var i = 0;i < Math.floor(realPageSize) ;i++) {
+                        var pageNum = i + 1;
+                         pageHtml.push(' <li><a onclick="queryCourseByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+                        //pageHtml.push(' <li><a>' + pageNum +'</a></li>')
+                    }
+                    pageHtml.push(
+                        '<li>' +
+                        '<a href="#" aria-label="Next">' +
+                        '<span aria-hidden="true">&raquo;</span>' +
+                        '</a>' +
+                        '</li>' +
+                        '</ul>' +
+                        '</nav>');
+                    $("#coursePagination").html(pageHtml.join(""));
+                }
+            })
+        }
+
+        // 删除课程
+        deleteCourse = function (courseId) {
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/courses/delete/" + courseId,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        alert("删除成功");
+                        getCoursesInfo();
+                    }
+                }
+            })
+        }
+
+        // 通过课程
+        auditCourse = function (courseId) {
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/courses/auditCourse?id=" + courseId,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        alert(data.message);
+                        getCoursesInfo();
+                    }
+                }
+            })
+        }
+
+        // 拒绝课程通过
+        rejectCourse = function (courseId) {
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/courses/rejectCourse?id=" + courseId,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        alert(data.message);
+                        getCoursesInfo();
+                    }
+                }
+            })
+        }
+
+        // 查看课程详情
+
+        // 课程分页查询
+        queryCourseByPageNum = function (pageNum) {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/courses/selectPagesByCondition?pageNum=" + pageNum,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    var html = [];
+                    var length = data.result.content.length;
+                    for (var i = 0; i < length ; i++) {
+                        html.push(
+                            '<div class="col-sm-6 col-md-4" style="width: 200px">' +
+                            '<div class="thumbnail">' +
+                            '<img src=" '+ data.result.content[i].courseImage +'" style="height: 100px">' +
+                            '<div class="caption">' +
+                            '<h3>' + data.result.content[i].courseName + '</h3>' +
+                            '<p>' + data.result.content[i].teachedBy+ '</p>' +
+                            '<p><button class="btn btn-primary" role="button">查看</button>' +
+                            '<button class="btn btn-danger" role="button" onclick="deleteCourse(' + data.result.content[i].id +')">删除</button></p>'+
+                            '<p><button class="btn btn-success" role="button" onclick="auditCourse(' + data.result.content[i].id +')">通过</button>' +
+                            '<button class="btn btn-default" role="button" onclick="rejectCourse(' + data.result.content[i].id +')">拒绝</button></p>'+
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        )
+                    }
+                    $("#courseInfo").html(html.join(""));
+                }
+            })
+        }
+
+        // 初始化所有班级
+        function getClassesInfo() {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/classes/selectPagesByCondition",
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    var html = [];
+                    var k = 0;
+                    var length = data.result.content.length + 1;
+                    for (var i = 0; i < length ; i++) {
+                        if (i == 0) {
+                            html.push(
+                                '<div class="col-sm-6 col-md-4" style="width: 200px">' +
+                                '<div class="thumbnail">' +
+                                '<img src="/image/common/add.jpg" style="height: 100px">' +
+                                '<div class="caption">' +
+                                '<h3>班级代码</h3>' +
+                                '<p><button class="btn btn-primary" role="button" onclick="addClass()">增加</button></p>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>'
+                            )
+                        } else {
+                            html.push(
+                                '<div class="col-sm-6 col-md-4" style="width: 200px">' +
+                                '<div class="thumbnail">' +
+                                '<img src=" '+ data.result.content[k].classImage +'" style="height: 100px">' +
+                                '<div class="caption">' +
+                                '<h3>' + data.result.content[k].classCode + '</h3>' +
+                                '<p><button class="btn btn-primary" role="button">查看</button>' +
+                                '<button class="btn btn-danger role="button" onclick="deleteClass(' + data.result.content[k].id +')">删除</button></p>'+
+                                '</div>' +
+                                '</div>' +
+                                '</div>'
+                            )
+                            k++;
+                        }
+                    }
+                    $("#classInfo").html(html.join(""));
+                    var pageHtml = [];
+                    var pageCount = (data.result.totalSize + 1) % data.result.pageSize;
+                    var realPageSize;
+                    if (pageCount == 0) {
+                        realPageSize = (data.result.totalSize + 1) / data.result.pageSize;
+                    } else {
+                        realPageSize = (data.result.totalSize + 1) / data.result.pageSize + 1;
+                    }
+                    pageHtml.push(
+                        '<nav aria-label="Page navigation">' +
+                        '<ul class="pagination">' +
+                        '<li>' +
+                        '<a aria-label="Previous">' +
+                        '<span aria-hidden="true">&laquo;</span>' +
+                        '</a>' +
+                        '</li>');
+                    for (var i = 0;i < Math.floor(realPageSize) ;i++) {
+                        var pageNum = i + 1;
+                       pageHtml.push(' <li><a onclick="queryClassesByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+                    }
+                    pageHtml.push(
+                        '<li>' +
+                        '<a href="#" aria-label="Next">' +
+                        '<span aria-hidden="true">&raquo;</span>' +
+                        '</a>' +
+                        '</li>' +
+                        '</ul>' +
+                        '</nav>');
+                    $("#classesPagination").html(pageHtml.join(""));
+                }
+            })
+        }
+
+        // 增加班级
+        addClass = function () {
+            window.location.href = "/admin/addClasses";
+        }
+
+        // 删除班级
+        deleteClass = function (classId) {
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/zxjx/classes/delete/" + classId,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        alert(data.message);
+                        getClassesInfo();
+                    }
+                }
+            })
+        }
+
+        // 查看班级详细信息
+
+        // 班级分页
+        queryClassesByPageNum = function (pageNum) {
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/classes/selectPagesByCondition",
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    var html = [];
+                    var k = 0;
+                    var length = data.result.content.length + 1;
+                    for (var i = 0; i < length ; i++) {
+                        if (i == 0) {
+                            html.push(
+                                '<div class="col-sm-6 col-md-4" style="width: 200px">' +
+                                '<div class="thumbnail">' +
+                                '<img src="/image/common/add.jpg" style="height: 100px">' +
+                                '<div class="caption">' +
+                                '<h3>班级代码</h3>' +
+                                '<p><button class="btn btn-primary" role="button" onclick="addClass()">增加</button></p>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>'
+                            )
+                        } else {
+                            html.push(
+                                '<div class="col-sm-6 col-md-4" style="width: 200px">' +
+                                '<div class="thumbnail">' +
+                                '<img src=" '+ data.result.content[k].classImage +'" style="height: 100px">' +
+                                '<div class="caption">' +
+                                '<h3>' + data.result.content[k].classCode + '</h3>' +
+                                '<p><button class="btn btn-primary" role="button">查看</button>' +
+                                '<button class="btn btn-danger role="button" onclick="deleteClass(' + data.result.content[k].id +')">删除</button></p>'+
+                                '</div>' +
+                                '</div>' +
+                                '</div>'
+                            )
+                            k++;
+                        }
+                    }
+                    $("#classInfo").html(html.join(""));
+                }
+            })
+        }
+
+        // 请假申请
+        function getVacationInfo(){
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/vacation-requsition/selectPagesByCondition",
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        var html = [];
+                        var pageHtml = [];
+                        html.push(
+                            '<thead>' +
+                            '<tr>' +
+                            '<th style="text-align: center;">请假人</th>' +
+                            '<th style="text-align: center;">角色</th>' +
+                            '<th style="text-align: center;">请假时间从</th>' +
+                            '<th style="text-align: center;">请假时间至</th>' +
+                            '<th style="text-align: center;">状态</th>' +
+                            '<th style="text-align: center;">操作</th>' +
+                            '</tr>' +
+                            '</thead>' +
+                            '<tbody>'
+                        )
+                        for (var i = 0;i < data.result.content.length;i++) {
+                            html.push("<td style='display: none'>" + data.result.content[i].id +"</td>")
+                            html.push("<td>" + data.result.content[i].requisitionName +"</td>")
+                            html.push("<td>" + data.result.content[i].role +"</td>")
+                            html.push("<td>" + formatTime( + '/'+data.result.content[i].vacationTimeFrom+'/' ) +"</td>")
+                            html.push("<td>" + formatTime( + '/'+data.result.content[i].vacationTimeTo+'/'  ) +"</td>")
+                            html.push("<td>" + data.result.content[i].status +"</td>")
+                            html.push( "<td class='btn-group'>" +
+                                "<button class='btn btn-danger' style='width: 80px' onclick='audit(" + data.result.content[i].id +")'>审批</button>" +
+                                "</td>")
+                        }
+                        html.push("</tbody>")
+                        var teacherInfoTable = $("#vacationInfoTable");
+                        teacherInfoTable.html(html.join(""));
+
+                        pageHtml.push(
+                            '<nav aria-label="Page navigation">' +
+                            '<ul class="pagination">' +
+                            '<li>' +
+                            '<a aria-label="Previous">' +
+                            '<span aria-hidden="true">&laquo;</span>' +
+                            '</a>' +
+                            '</li>');
+                        for (var i = 0;i < data.result.totalPages;i++) {
+                            var pageNum = i + 1;
+                            pageHtml.push(' <li><a onclick="queryVacationByPageNum('+ pageNum +')">' + pageNum +'</a></li>')
+                        }
+                        pageHtml.push(
+                            '<li>' +
+                            '<a href="#" aria-label="Next">' +
+                            '<span aria-hidden="true">&raquo;</span>' +
+                            '</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '</nav>');
+                        $("#vacationPagination").html(pageHtml.join(""));
+                    }
+                }
+            })
+        }
+
+        // 请假申请分页
+         queryVacationByPageNum = function(pageNum){
+            $.ajax({
+                type:"GET",
+                async:false,
+                url:"/zxjx/vacation-requsition/selectPagesByCondition?pageNum=" + pageNum,
+                dataType:"json",
+                contentType:"application/json",
+                success:function (data) {
+                    if (data) {
+                        var html = [];
+                        var pageHtml = [];
+                        html.push(
+                            '<thead>' +
+                            '<tr>' +
+                            '<th style="text-align: center;">请假人</th>' +
+                            '<th style="text-align: center;">角色</th>' +
+                            '<th style="text-align: center;">请假时间从</th>' +
+                            '<th style="text-align: center;">请假时间至</th>' +
+                            '<th style="text-align: center;">状态</th>' +
+                            '<th style="text-align: center;">操作</th>' +
+                            '</tr>' +
+                            '</thead>' +
+                            '<tbody>'
+                        )
+                        for (var i = 0;i < data.result.content.length;i++) {
+                            html.push("<td>" + data.result.content[i].id +"</td>")
+                            html.push("<td>" + data.result.content[i].requisitionName +"</td>")
+                            html.push("<td>" + data.result.content[i].role +"</td>")
+                            html.push("<td>" + formatTime( + '/'+data.result.content[i].vacationTimeFrom+'/' ) +"</td>")
+                            html.push("<td>" + formatTime( + '/'+data.result.content[i].vacationTimeTo+'/'  ) +"</td>")
+                            html.push("<td>" + data.result.content[i].status +"</td>")
+                            html.push( "<td class='btn-group'>" +
+                                "<button class='btn btn-danger' style='width: 80px' onclick='audit(" + data.result.content[i].id +")'>审批</button>" +
+                                "</td>")
+                        }
+                        html.push("</tbody>")
+                        var teacherInfoTable = $("#vacationInfoTable");
+                        teacherInfoTable.html(html.join(""));
+                    }
+                }
+            })
+        }
+
+
+        // 审批请假申请
+        audit = function (vacationId) {
+           var auditBy = $("#adminId").val();
+            $.ajax({
+                async:false,
+                type:"POST",
+                url:"/zxjx/vacation-requsition/audit?vacationRequsitionId=" + vacationId +"&auditBy=" +auditBy,
+                dataType:"json",
+                processData:false,
+                contentType:false,
+                success:function (data) {
+                    alert(data.message);
+                    getVacationInfo();
+                }
+            })
+        }
+        // 格式化时间
+        function formatTime(date) {
+            var result = date.substr(3,10);
+            return result;
+        }
+        // 初始化数据
+        function initResults(){
+            getPlatformInfo();
+            getTeacherInfo();
+            getStudentInfo();
+            getcourseClassInfo();
+            getCoursesInfo();
+            getClassesInfo();
+            getVacationInfo();
+        }
+        initResults();
+    })
+</script>
+</body>
+</html>

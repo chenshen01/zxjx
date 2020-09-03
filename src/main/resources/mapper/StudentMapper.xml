@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zxjx.mapper.StudentMapper">
+    <resultMap id="BaseResultMap" type="com.zxjx.entity.Student">
+        <result column="id" property="id" jdbcType="DECIMAL"/>
+        <result column="study_code" property="studyCode" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="head_image" property="headImage" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="qq" property="qq" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="DECIMAL"/>
+        <result column="school" property="school" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="DECIMAL"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="online_status" property="onlineStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectStudentByCourseId" parameterType="long" resultMap="BaseResultMap">
+        select zx.*
+        from zxjx_orders zo,zxjx_order_detail zod,zxjx_student zx
+        where zo.buyer_id = zx.id
+        and zo.id = zod.order_id
+        and zod.course_id = #{courseId}
+    </select>
+</mapper>

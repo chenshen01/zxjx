@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	 <head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="x-ua-compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+	    <link rel="stylesheet" href="../js/css/bootstrap.min.css" >
+		<link rel="stylesheet" href="../js/css/bootstrap.css">
+		<link rel="stylesheet" href="../js/css/bootstrap-theme.css"/>
+		<link rel="stylesheet" href="../js/css/bootstrap-theme.min.css"/>
+		<style>
+			*{
+				padding: 0;
+				margin: 0;
+			}
+		</style>
+	  </head>
+	  <body>
+		<header>
+			<nav class="navbar navbar-default navbar-inverse row">
+			  <div class="container-fluid">
+			    <div class="navbar-header col-lg-3">
+			      <p class="navbar-brand" href="#">
+			             <h3 style="color: white;">蔚洁在线教育</h3>
+			       </p>
+			    </div>
+			  </div>
+			</nav>
+		</header> 
+		<div id="registerBody" class="row">
+			<div id = "becomeStudentInfo" class="col-lg-10 col-lg-offset-2">
+				<form class="form-horizontal" role="form" id="becomeStudentInfoForm" enctype="multipart/form-data">
+				  <div class="form-group">
+				    <label  class="col-sm-2 control-label">课程名字</label>
+				    <div class="col-sm-10" style="width: 400px;">
+				      <input id="courseName" type="text" class="form-control" placeholder="课程名字">
+				    </div>
+				  </div>
+				<div class="form-group">
+				  <label  class="col-sm-2 control-label">老师</label>
+				  <div class="col-sm-10" style="width: 400px;">
+				    <input id="teacherName" type="text" class="form-control" placeholder="老师" th:value="${session.curTeacher.name}">
+				  </div>
+				</div>
+				<div class="form-group" style="display: none">
+					<label  class="col-sm-2 control-label">老师id</label>
+					<div class="col-sm-10" style="width: 400px;">
+						<input id="id" type="text" class="form-control" placeholder="老师" th:value="${session.curTeacher.id}">
+					</div>
+				</div>
+				<div class="form-group">
+				  <label  class="col-sm-2 control-label">课程类别</label>
+				  <div class="col-sm-10" style="width: 400px;">
+					  <select id="roleValue">
+
+					  </select>
+				  </div>
+				</div>
+				<div class="form-group">
+				  <label  class="col-sm-2 control-label">课程价格</label>
+				  <div class="col-sm-10" style="width: 400px;">
+				    <input id="price" type="text" class="form-control" placeholder="课程价格">
+				  </div>
+				</div>
+				<div class="form-group">
+					<label  class="col-sm-2 control-label">课程时间段</label>
+					<div class="col-sm-10" style="width: 400px;">
+						<input id="timeQuantum" type="text" class="form-control" placeholder="请输入课程时间段">
+					</div>
+				</div>
+				<div class="form-group">
+					<label  class="col-sm-2 control-label">课时</label>
+					<div class="col-sm-10" style="width: 400px;">
+						<input id="courseTime" type="text" class="form-control" placeholder="请输入课时">
+					</div>
+				</div>
+				<div class="form-group">
+				  <label  class="col-sm-2 control-label">课程描述</label>
+				  <div class="col-sm-10" style="width: 400px;">
+				    <input id="description" type="text" class="form-control" placeholder="请输入课程描述">
+				  </div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">课程封面</label>
+				    <input id="courseImage" type="file" class="col-lg-offset-3">
+				  </div>
+				<div class="form-group">
+				  <label  class="col-sm-2 control-label"/>
+				  <div class="col-sm-10" style="width: 400px;">
+						<p><button id="teaAddCourseBtn" class="btn btn-success" style="width: 80px;">添加</button>
+					    <button id="teaAddCourseBackBtn" class="btn btn-success" style="width: 80px;">返回</button></p>
+				  </div>
+				</div>
+				</form>
+			</div>
+		</div>
+		<script src="../js/js/jQuery-3.4.1.js"></script>
+		<script src="../js/js/bootstrap.js"></script>
+		<script src="../js/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			$(function () {
+				// 获取所有课程类别
+				function getAllCourseClass(){
+					$.ajax({
+						type:"GET",
+						async:false,
+						url:"/zxjx/course-class/selectAll",
+						dataType:"json",
+						contentType:"application/json",
+						success:function (data) {
+							if (data) {
+								var html = [];
+								var k = 0;
+								var length = data.result.length + 1;
+								for (var i = 0;i < length;i++) {
+									if (i == 0) {
+										html.push(
+												'<option value="" style="text-align: center;">---课程类别---</option>'
+										);
+									} else {
+										var id = data.result[k].id;
+										var courseClassName = data.result[k].courseClassName;
+										html.push(
+												'<option value="' + id + '" style="text-align: center;">' + courseClassName + '</option>'
+										)
+										k++;
+									}
+								}
+								$("#roleValue").html(html.join(""));
+							}
+						}
+					})
+				}
+				getAllCourseClass();
+				// 添加课程
+				$("#teaAddCourseBtn").click(function () {
+					var teachedBy = $("#id").val();
+					var courseName = $("#courseName").val();
+					var courseClass = $("#roleValue").val();
+					var price = $("#price").val();
+					var timeQuantum = $("#timeQuantum").val();
+					var courseTime = $("#courseTime").val();
+					var description = $("#description").val();
+					var courseImage = $("#courseImage").get(0).files[0];
+					var teacherName = $("#teacherName").val();
+					// to-do 校验
+					var courseInfo = new FormData();
+					courseInfo.append("teachedBy",teachedBy);
+					courseInfo.append("courseName",courseName);
+					courseInfo.append("courseClass",courseClass);
+					courseInfo.append("price",price);
+					courseInfo.append("courseTime",courseTime);
+					courseInfo.append("timeQuantum",timeQuantum);
+					courseInfo.append("description",description);
+					courseInfo.append("courseImage",courseImage);
+					courseInfo.append("teacherName",teacherName);
+					$.ajax({
+						async:false,
+						type:"POST",
+						url:"/zxjx/courses/addCourses",
+						dataType:"json",
+						processData:false,
+						contentType:false,
+						data:courseInfo,
+						success:function (data) {
+							if (data.code == "200") {
+								alert("添加成功");
+							}
+						}
+					})
+					return false;
+				})
+				// 返回
+				$("#teaAddCourseBackBtn").click(function () {
+					$.ajax({
+						async:false,
+						type:"GET",
+						url:"/teacher/backToGetTeacherMain",
+						dataType:"json",
+						processData:false,
+						contentType:false,
+						success:function (data) {
+							if (data) {
+								window.location.href = "/teacher/getTeacherMain"
+							}
+						},
+						xhrFields: {
+							withCredentials: true
+						}
+					})
+					return false;
+				})
+			})
+		</script>
+	  </body>
+</html>

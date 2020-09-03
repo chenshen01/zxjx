@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<link rel="stylesheet" href="../js/css/bootstrap.min.css" >
+	<link rel="stylesheet" href="../js/css/bootstrap.css">
+	<link rel="stylesheet" href="../js/css/bootstrap-theme.css"/>
+	<link rel="stylesheet" href="../js/css/bootstrap-theme.min.css"/>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		#addClassBody{
+			position: relative;
+			margin-top: 10%;
+			margin-left: 6%;
+		}
+	</style>
+</head>
+<body>
+<header>
+	<nav class="navbar navbar-default navbar-inverse row">
+		<div class="container-fluid">
+			<div class="navbar-header col-lg-3">
+				<p class="navbar-brand" href="#">
+				<h3 style="color: white;">蔚洁在线教育</h3>
+				</p>
+			</div>
+		</div>
+	</nav>
+</header>
+<div id="addClassBody" class="row">
+	<div id = "becomeTeacherInfo" class="col-lg-10 col-lg-offset-2" style="display: block;">
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">班级代码</label>
+				<div class="col-sm-10" style="width: 400px;">
+					<input id="classCode" type="text" class="form-control" placeholder="CLA_001">
+				</div>
+			</div>
+			<div class="form-group">
+				<label  class="col-sm-2 control-label">班级容量</label>
+				<div class="col-sm-10" style="width: 400px;">
+					<input id="classCapacity" type="text" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label  class="col-sm-2 control-label">班级封面</label>
+				<div class="col-sm-10" style="width: 400px;">
+					<input id="classImage" type="file">
+				</div>
+			</div>
+			<div class="form-group">
+				<label  class="col-sm-2 control-label">所属课程</label>
+				<div class="col-sm-10" style="width: 400px;">
+					<select id="courseInfo">
+
+					</select>
+				</div>
+			</div>
+			<div class="btn-group col-lg-offset-3" id="btnActions">
+				<p><button id="adminAddClassBtn" class="btn btn-success" style="width: 80px;">添加</button>
+					<button id="adminAddClassBackBtn" class="btn btn-success" style="width: 80px;">返回</button></p>
+			</div>
+		</form>
+	</div>
+</div>
+<script src="../js/js/jQuery-3.4.1.js"></script>
+<script src="../js/js/bootstrap.js"></script>
+<script src="../js/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	// 返回
+	$("#adminAddClassBackBtn").click(function () {
+		$.ajax({
+			async:false,
+			type:"GET",
+			url:"/admin/backToAdmin",
+			dataType:"json",
+			processData:false,
+			contentType:false,
+			success:function (data) {
+				if (data) {
+					window.location.href = "/admin"
+				}
+			},
+			xhrFields: {
+				withCredentials: true
+			}
+		})
+		return false;
+	})
+
+	// 初始化所有通过的课程
+	// 获取所有课程类别
+	function getAuditedCourseInfo(){
+		$.ajax({
+			type:"GET",
+			async:false,
+			url:"/zxjx/courses/selectByCondition?status=" + "已审核",
+			dataType:"json",
+			contentType:"application/json",
+			success:function (data) {
+				if (data) {
+					var html = [];
+					var k = 0;
+					var length = data.result.length + 1;
+					for (var i = 0;i < length;i++) {
+						if (i == 0) {
+							html.push(
+									'<option value="" style="text-align: center;">---选择课程---</option>'
+							);
+						} else {
+							var id = data.result[k].id;
+							var courseName = data.result[k].courseName;
+							html.push(
+									'<option value="' + id + '" style="text-align: center;">' + courseName + '</option>'
+							)
+							k++;
+						}
+					}
+					$("#courseInfo").html(html.join(""));
+				}
+			}
+		})
+	}
+	getAuditedCourseInfo();
+	// 添加
+	$("#adminAddClassBtn").click(function () {
+		var courseId = $("#courseInfo").val();
+		var classCode = $("#classCode").val();
+		var classCapacity = $("#classCapacity").val();
+		var classImage = $("#classImage").get(0).files[0];
+		check(courseId,"请选择要创建班级的课程");
+		check(classCode,"请输入班级代码");
+		check(classCapacity,"请输入班级容量");
+		if (classCapacity <= 0) {
+			alert("请输入合法的班级容量");
+			return;
+		}
+		var courseInfo = new FormData();
+		courseInfo.append("courseId",courseId);
+		courseInfo.append("classCode",classCode);
+		courseInfo.append("classCapacity",classCapacity);
+		courseInfo.append("classImage",classImage);
+		$.ajax({
+			async:false,
+			type:"POST",
+			url:"/zxjx/classes/addClasses",
+			dataType:"json",
+			processData:false,
+			contentType:false,
+			data:courseInfo,
+			success:function (data) {
+				if (data.code == "200") {
+					alert("添加成功");
+				}
+			}
+		})
+		return false;
+	})
+	function check(value,message){
+		if (value == "") {
+			alert(message);
+			return;
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zxjx.mapper.ClassesMapper">
+    <resultMap id="BaseResultMap" type="com.zxjx.entity.Classes">
+        <result column="id" property="id" jdbcType="DECIMAL"/>
+        <result column="class_code" property="classCode" jdbcType="VARCHAR"/>
+        <result column="class_capacity" property="classCapacity" jdbcType="DECIMAL"/>
+        <result column="class_status" property="classStatus" jdbcType="VARCHAR"/>
+        <result column="student_account" property="studentAccount" jdbcType="DECIMAL"/>
+        <result column="course_id" property="courseId" jdbcType="DECIMAL"/>
+        <result column="class_image" property="classImage" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryTeacherTeachingClasses" parameterType="long" resultMap="BaseResultMap">
+        select zcs.*
+        from zxjx_teacher zx,zxjx_courses zc ,zxjx_classes zcs
+        where zx.id = zc.teached_by and zc.id = zcs.course_id
+        and zx.id = #{id}
+    </select>
+</mapper>
